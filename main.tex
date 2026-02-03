@@ -1,0 +1,245 @@
+\documentclass[12pt, letterpaper]{article}
+\input{usepackages}
+\input{page_margin}
+
+\begin{document}
+\input{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+\section{Setup and Initialization Methods}
+\subsection{CCD Specs}
+
+\label{specs}
+Bias and dome flat frames were taken with Phillips Academy Observatory (PAO)'s FLI ProLine 4240-1 Cooled Monochrome CCD Camera, which takes 2048 by 2048 images with a Full-Well depth of $100ke{^-}$.  \ref{fig:ProLine} The images in this analysis were integrated using the luminance filter and $1\times1$ binning, with a readout rate of 2 MHz. 
+
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[scale=0.3, angle=0]{images/FLIProLine4240-1CCD.jpg}
+    \caption{A FLI ProLine 4240-1 Cooled Monochrome CCD Camera}
+    \label{fig:ProLine}
+\end{figure}
+
+\subsection{ROI \& Image Filtering}
+\label{ROIcleaning}
+ The analysis occurred in the region of interest (ROI) defined by a $512\times512$ pixel region centered at $(1024, 1024)$, which corresponds to the center of the $2048\times2048$ image. This central region has an area of $512\times512 = 262144 $ pixels. Flat frame pairs with at least one frame that had at least one pixel with $ADU \geq  40,000$ were excluded from the analysis. 
+
+ \begin{figure}[hbtp!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/ROIimage.png}
+    \caption{ROI overlaid on a Flat Frame}
+    \label{fig:ROIOverlay}
+\end{figure}
+
+\section{Mean Bias Levels}
+\subsection{Stability Inspection}
+\label{methods bias}
+Two samples of bias frames were taken with the camera, one at $T_1 = \qty{-35}{\degreeCelsius}$ ( 'Cooled) and one at $T_2 \approx \qty{17}{\degreeCelsius}$ ('Uncooled ') , with $n_i = 29$. Pixel-by-pixel arithmetic means and sample standard deviations were taken for each bias image.
+\label{mean bias results }
+A significant, non-stochastic drift is seen in the mean bias level across slices, indicating small changes in DC current across captures as seen in Fig \ref{fig:CooledBiasStability}.  The difference between the average bias of the first ten slices and the average bias of the second ten slices is more than $2.5 \sigma $ away from the mean bias value. However, no apparent visual structure was found in the cooled bias frames, as shown in Figure \ref{fig:CooledBias}.
+
+
+\begin{figure}[hbtp!]
+    \centering
+    \includegraphics[scale=0.3, angle=0]{images/NEWROISlice-Mean.png}
+    \caption{The stability of the mean bias offset at $T_1$}
+    \label{fig:CooledBiasStability}
+\end{figure}
+
+\begin{figure}[hbtp!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/CooledBIAS_1x1_2.jpg}
+    \caption{Bias frame taken at $T_1$}
+    \label{fig:CooledBias}
+\end{figure}
+
+\subsection{Temperature Dependency}
+
+At higher temperatures, the mean bias is much more unstable, with the standard deviation in bias at while uncooled is more than double that of cooled frames as noted in Table \ref{tab:CUCtable}.The lack of cooling means that temperature should increase as the electronics warm up from use, which by means of $e^-$ excitation can almost perfectly explain the trend seen in Figure \ref{fig:RTBiasStability}. While this analysis is beyond the scope of this exercise, a corresponding increase in readout noise is expected at higher temperatures as well.  This phenomena can be visually verified by examining the structured noise in the uncooled biases seen in Figure \ref{fig:RTBias} well as in the global discrepancies displayed in Table  \ref{tab:CUCtable}.
+
+\begin{table} [hbtp!]
+    \centering
+    \begin{tabular}{cccc}
+         \toprule
+         Measurement&  Cooled& Uncooled& $|{\Delta}|$\\
+         \midrule
+         Mean&  909.72&  1259.20& 349.48\\
+         Median&  909.66&  1258.83& 349.17\\
+         $\sigma_r$ &  8.56&  18.32& 9.76\\
+         \bottomrule
+    \end{tabular}
+    \caption{Global differences between cooled and uncooled bias levels}
+    \label{tab:CUCtable}
+\end{table}
+
+\begin{figure}[hbtp!]
+    \centering
+    \includegraphics[scale=0.3, angle=0]{images/RTCalibrationBiasCCDChar-768-768.png}
+    \caption{The stability of the mean bias offset at $T_2$}
+    \label{fig:RTBiasStability}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/BIAS_1x1_2.png}
+    \caption{Bias frame taken at $T_2$ }
+    \label{fig:RTBias}
+\end{figure}
+
+\section{Readout Noise}
+\label{readout noise}
+\subsection{Theory}
+\label{readout theory}
+Readout is electrical interference from the CCD chip while converting electron counts to ADU (Analog-to-Digital Units). It can be approximated by differencing bias frames as shown in the formula below, where $B_i$ is the ADU count for a pixel at the time $i$, $B_0$ is the fixed bias pattern, $\Delta B_i$ is a time-dependent variation,  and $R_i$ is readout noise. 
+
+$$B_i = B_0 +\Delta B_i + R_i$$ 
+
+If two bias frames are taken at the same time, $\Delta B_i$ should disappear, and the $B_0$ terms should cancel out, leaving us with the difference in two independent readout noise terms. 
+\subsection{Measurement}
+14 independent pairs of biases taken at the same time were differenced. The read noise $\sigma_{r, ADU}$was calculated for each differenced pair using the equation $\sigma_r = \frac{\sigma_d}{\sqrt{2}}$, which is derived from $2\sigma^2_r = \sigma^2_D$ by taking the square root of both sides. The results from subsequent calculations are shown below in Table \ref{ReadNoiseTable}.
+\subsection{Results}
+\label{readnoisecalc}
+
+\begin{table}[hbtp!]
+    \centering
+    \begin{tabular}{l lll} 
+        \toprule
+        Pair& Mean  &$\sigma_D$ &$\sigma_r$\\
+        \midrule
+        1 & 0.380  &12.135 &8.581\\
+        2 & 0.362  &12.119 &8.569\\
+        3 & 0.346  &12.125 &8.574\\
+        4 & 0.526  &12.123 &8.572\\
+        5 & 0.276  &12.135 &8.581\\
+        6 & 0.415  &12.125 &8.574\\
+        7 & 0.355  &12.113 &8.565\\
+        8 & 0.400  &12.131 &8.578\\
+        9 & 0.585  &12.114 &8.566\\
+        10 & 0.597  &12.075 &8.538\\
+        11 & 0.439  &12.084 &8.544\\
+        12 & 0.380  &12.117 &8.568\\
+        13 & 0.253  &12.096 &8.553\\
+        14 & 0.396  &12.095 &8.552\\
+        \midrule
+        Mean & 0.408  &12.113 &8.565\\
+        Median & 0.388  &12.118 &8.569\\
+        \bottomrule
+
+    \end{tabular}
+    \caption{Read noise for differenced pairs}
+    \label{ReadNoiseTable}
+\end{table}
+
+For the result $\sigma_r = 8.5654$, the uncertainty was calculated using the standard error of the mean:
+\[
+\text{SEM}_{\sigma_{r, e}} = \frac{\sqrt{\frac{\sum_{i=1}^{n_D} (\sigma_i - \bar{\sigma})^2}{n_D-1}}} {\sqrt{n_D}} = 0.0036.
+\]
+This brings us to a final value of $\sigma_{r, \text{ADU}} = 8.5654 \pm 0.0036$. We convert this to electrons using:
+\[
+\sigma_{r, e^-} = (\sigma_r \cdot g) \pm \sigma_{r, e^-} \sqrt{\left(\frac{\Delta g}{g}\right)^2 + \left(\frac{\Delta \sigma_{r, \text{ADU}}}{\sigma_{r, \text{ADU}}}\right)^2} = 12.94 \pm 0.19 \text{ e}^-
+\]
+
+This is slightly below the read noise budget listed by the manufacturer, which is 14 $e^-$, at 2 MHz.
+
+\section{Gain Determination}
+\subsection{Deriving $S_k$, $g_k$, and $Var(S)$}
+\label{gain derivation}
+Gain quantifies the CCD chip's  conversion between $e^-$ counts and arbitrary units that can be represented in 16-bit format.  It can be expressed as $g = N_{e^-}/S$. Using Poisson statistics, we can approximate the variance in signal as $Var(s) = Var(N_{e^-})/g^2$. Since we can approximate the variance in the number of photons (and thus electrons) as $Var(N_{e^-}) = \langle N_{e^-} \rangle =  S \times g$, we can express the variance in signal as $Var(S) = \frac{S}{g}$, which is extremely useful for quantifying photometric error and SNR. 
+
+We can subtract the read noise from the total variance to isolate the shot noise, as seen below. Used with a set of differenced pairs of flat frames, this can be used to directly calculate the gain at a given exposure time. 
+$$\sigma^2_{
+F,k }= Var(F_k) = \frac{Var(D_k)}{2}
+$$
+We can find the signal $S_k$, by averaging the counts of the two flats that were differenced. $$S_k = \frac{\langle F_{k, 1} \rangle + \langle F_{k, 2} \rangle}{2} $$
+Then, to isolate the shot noise, we must subtract the readout noise from the variance. $$Var(S) = Var(F_k) - \sigma^2_r$$
+
+We are left with the expression $ Var(S) = \frac{\langle F_{k, 1} \rangle + \langle F_{k, 2} \rangle}{2g_k} $, which can be simplified to $$g_k =\frac {S_k}{Var(S)}$$
+\subsection{Differencing Flat Pairs}
+6 pairs of flats taken at $T = \qty{-35.00}{\degreeCelsius}$ with $t_{exp} = \{5, 7.5, 10, 15, 17.5, 20\}$ seconds were differenced. The differencing of flat pairs removes structural elements in the images because the two images are taken under identical conditions, so specific pixel-by-pixel discrepancies or dust motes are duly subtracted. This is shown as the $F_o$ term below.
+$$D_k = F_{k,1} - F_{k,2} = (F_0 + n_{k,1}) - (F_0 + n_{k,2}) = n_{k,1} - n_{k,2}$$
+Therefore, $Var(D_k) = 2\sigma^2_{F_k}$, from which $\sigma^2_{F_k} = Var(D_k)/2$. We can then quantify the shot noise from the ${\sigma^2_{F, k}}$ term, as we can subtract the already-quantified readout noise from section \ref{readout noise}. The resulting distribution is almost perfectly gaussian as seen in Figure \ref{fig:1b}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/Distribution10sFlat.png}
+    \caption{Pixel value distribution of a flat frame with $t_{exp}$ = 10s  }
+    \label{fig:FlatDistribution10s}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/Differenced5sFlat.png}
+        \caption{Differenced flat frame with $t_{exp}$ = 5s  }
+        \label{fig:1a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/HistogramFlatsReducedt=5s.png}
+        \caption{Pixel value distribution for the differenced image}
+        \label{fig:1b}
+    \end{subfigure}
+    \caption{Image and ADU distribution for diffeenced flat frame with $t_{exp} = 5s$}
+    \label{fig:5sflatframedoublepanel}
+\end{figure}
+
+
+\subsection{Calculations \& Quantifying Uncertainty}
+The results, which are calculated on the differenced flat frames using the equations derived in \ref{gain derivation} are displayed below. The error in the gain value is calculated accordingly:
+
+\[
+\text{SEM}_{gain} = \frac{\sqrt{\frac{\sum_{i=1}^{n_D} (g_i - \bar{g})^2}{n_D-1}}} {\sqrt{n_D}} = 0.022
+\]
+
+\begin{table} [H]
+    \centering
+    \sisetup{group-digits=true, group-separator={,}}
+    
+    \begin{tabular}{
+        S[table-format=1.0, round-mode=places, round-precision=0]
+        S[table-format=3.3, round-mode=places, round-precision=3] 
+        S[table-format=2.1, round-mode=places, round-precision=1] 
+        S[table-format=5.2, round-mode=places, round-precision=2] 
+        S[table-format=5.2, round-mode=places, round-precision=2] 
+        S[table-format=5.2, round-mode=places, round-precision=2] 
+        S[table-format=5.2, round-mode=places, round-precision=2] 
+        S[table-format=1.4, round-mode=places, round-precision=4] 
+    }
+        \toprule
+        {Pair}&{$\sigma_{D,k}$} & {$t_{exp}$} & {$Var({D, k})$} & {$Var({F, k})$} & {$Var(shot, k)$} & {$S_k$} & {$g_k$} \\
+        \midrule
+        1 & 99.0465   & 5    & 9810.209162 & 4905.104581 & 4831.738504 & 7732.46533  & 1.600348472 \\
+        2 & 122.72687 & 7.5  & 15061.88462 & 7530.94231  & 7457.576233 & 11510.61328 & 1.543479131 \\
+        3 & 144.18086 & 10   & 20788.12039 & 10394.0602  & 10320.69412 & 15400.12598 & 1.492159907 \\
+        4 & 172.62817 & 15   & 29800.48508 & 14900.24254 & 14826.87646 & 22208.01954 & 1.49782185 \\
+        5 & 185.99951 & 17.5 & 34595.81772 & 17297.90886 & 17224.54278 & 25580.14844 & 1.485098836 \\
+        6 & 202.48605 & 20   & 41000.60044 & 20500.30022 & 20426.93415 & 29530.08106 & 1.445644307 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Gain Values and Variance Statistics}
+    \label{tab:GainValues}
+\end{table}
+
+$$ \langle g_k \rangle = 1.511$$ $$\tilde{g_k} = 1.495$$, $$g_k = 1.511 \pm 0.022\footnote{This value, which is an average and thus has easily quantified errors, will be used for converting the read noise to $e^-$ in \ref{readnoisecalc}} $$
+
+\subsection{Discussing Gain}
+The flat frames used in this study were not taken as close together as they could have been as $\Delta t_{f_{1, 2}}$ was almost always significantly greater than the $t_{exp, f}$, which increases chances of dust \& changing patterns that can't be perfectly accounted for by differencing. 
+
+In addition, at both low and high exposure times, non-linearity will affect gain values, which should stay constant as a function of $S_k$. Even though both irregularly low and high signal values were both excluded,  small remnants of integral non-linearity remain in the higher and lower $S_k$ values as seen in Figure \ref{fig:GainInstability}. Gain is stable at $t_{exp} \approx 12.5 \pm 2.5$ seconds, but nonlinearity begins at both high and low $S_k$ values. This can be accounted for by using the median of the gain values instead of the average. This results in a slightly decreased gain value and error that is harder to quantify, but also reduces the systematic error from non-linearity. Future calibration studies should increase the number of dome flat frames taken in the $t_{exp}$ range noted above from $N_F = 2$ to ascertain a gain value with higher statistical significance. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{images/GainInstability.png}
+    \caption{$g_k$  in terms of $S_k$. $g_{k}$ is stable when $S_k \approx (\num{1.6e4} , \num{2.3e4}$)}
+    \label{fig:GainInstability}
+\end{figure}
+
+\newpage
+\newpage
+\newpage
+\section*{Acknowledgment \& References}
+I would like to thank Dr. Zorrilla for the wonderful handout, and Ms. Odden for her help with calibration techniques. In addition, I'm grateful for the help of LaTex Stack Exchange for assisting me in learning how to use Overleaf. I'm very lucky to have amazing peers such as Kai Wang, Gentry Thatcher, Eddie Zhang, Becky Koleth, Aurelia Zhang, Nathan Wu, Kwezi Besiimire and many more,  who are always willing to answer my questions. Finally, I must express my appreciation for the Abbot Academy Fund's generous grant to fund our Astronomy Research infrastructure. 
+\end{document}
