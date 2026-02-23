@@ -136,8 +136,9 @@ For the result $\sigma_r = 8.5654$, the uncertainty was calculated using the sta
 \text{SEM}_{\sigma_{r, e}} = \frac{\sqrt{\frac{\sum_{i=1}^{n_D} (\sigma_i - \bar{\sigma})^2}{n_D-1}}} {\sqrt{n_D}} = 0.0036.
 \]
 This brings us to a final value of $\sigma_{r, \text{ADU}} = 8.5654 \pm 0.0036$. We convert this to electrons using:
+
 \[
-\sigma_{r, e^-} = (\sigma_r \cdot g) \pm \sigma_{r, e^-} \sqrt{\left(\frac{\Delta g}{g}\right)^2 + \left(\frac{\Delta \sigma_{r, \text{ADU}}}{\sigma_{r, \text{ADU}}}\right)^2} = 12.94 \pm 0.19 \text{ e}^-
+\sigma_{r, e^-} = (\sigma_r \cdot g) \pm \sigma_{r, e^-} \sqrt{\left(\frac{\Delta g}{g}\right)^2 + \left(\frac{\Delta \sigma_{r, \text{ADU}}}{\sigma_{r, \text{ADU}}}\right)^2} = \boxed{12.22 \pm 0.11 \text{ e}^-}
 \]
 
 This is slightly below the read noise budget listed by the manufacturer, which is 14 $e^-$, at 2 MHz.
@@ -151,10 +152,11 @@ We can subtract the read noise from the total variance to isolate the shot noise
 $$\sigma^2_{
 F,k }= Var(F_k) = \frac{Var(D_k)}{2}
 $$
-We can find the signal $S_k$, by averaging the counts of the two flats that were differenced. $$S_k = \frac{\langle F_{k, 1} \rangle + \langle F_{k, 2} \rangle}{2} $$
+We can find the signal $S_k$, by averaging the counts of the two flats that were differenced (after performing bias subtraction). $$S_k = \frac{\langle F_{k, 1} \rangle + \langle F_{k, 2} \rangle}{2} - \bar B $$
 Then, to isolate the shot noise, we must subtract the readout noise from the variance. $$Var(S) = Var(F_k) - \sigma^2_r$$
 
-We are left with the expression $ Var(S) = \frac{\langle F_{k, 1} \rangle + \langle F_{k, 2} \rangle}{2g_k} $, which can be simplified to $$g_k =\frac {S_k}{Var(S)}$$
+We are left with the expression
+$Var(S) = \frac{\langle F_{k, 1} + F_{k, 2}\rangle}{2g_k} - \frac{\bar B}{g_k}$, which can be simplified to $$g_k =\frac {S_k}{Var(S)}$$
 \subsection{Differencing Flat Pairs}
 6 pairs of flats taken at $T = \qty{-35.00}{\degreeCelsius}$ with $t_{exp} = \{5, 7.5, 10, 15, 17.5, 20\}$ seconds were differenced. The differencing of flat pairs removes structural elements in the images because the two images are taken under identical conditions, so specific pixel-by-pixel discrepancies or dust motes are duly subtracted. This is shown as the $F_o$ term below.
 $$D_k = F_{k,1} - F_{k,2} = (F_0 + n_{k,1}) - (F_0 + n_{k,2}) = n_{k,1} - n_{k,2}$$
@@ -191,7 +193,7 @@ Therefore, $Var(D_k) = 2\sigma^2_{F_k}$, from which $\sigma^2_{F_k} = Var(D_k)/2
 The results, which are calculated on the differenced flat frames using the equations derived in \ref{gain derivation} are displayed below. The error in the gain value is calculated accordingly:
 
 \[
-\text{SEM}_{gain} = \frac{\sqrt{\frac{\sum_{i=1}^{n_D} (g_i - \bar{g})^2}{n_D-1}}} {\sqrt{n_D}} = 0.022
+\text{SEM}_{gain} = \frac{\sqrt{\frac{\sum_{i=1}^{n_D} (g_i - \bar{g})^2}{n_D-1}}} {\sqrt{n_D}} = 0.013
 \]
 
 \begin{table} [H]
@@ -211,19 +213,22 @@ The results, which are calculated on the differenced flat frames using the equat
         \toprule
         {Pair}&{$\sigma_{D,k}$} & {$t_{exp}$} & {$Var({D, k})$} & {$Var({F, k})$} & {$Var(shot, k)$} & {$S_k$} & {$g_k$} \\
         \midrule
-        1 & 99.0465   & 5    & 9810.209162 & 4905.104581 & 4831.738504 & 7732.46533  & 1.600348472 \\
-        2 & 122.72687 & 7.5  & 15061.88462 & 7530.94231  & 7457.576233 & 11510.61328 & 1.543479131 \\
-        3 & 144.18086 & 10   & 20788.12039 & 10394.0602  & 10320.69412 & 15400.12598 & 1.492159907 \\
-        4 & 172.62817 & 15   & 29800.48508 & 14900.24254 & 14826.87646 & 22208.01954 & 1.49782185 \\
+        1 & 99.0465   & 5    & 9810.209162 & 4905.104581 & 4831.738504 & 6822.744957  & 1.412068338\\
+        2 & 122.72687 & 7.5  & 15061.88462 & 7530.94231  & 7457.576233 & 10600.89291 & 1.421493066 \\
+        3 & 144.18086 & 10   & 20788.12039 & 10394.0602  & 10320.69412 & 14490.4056 & 1.404014637 \\
+        4 & 172.62817 & 15   & 29800.48508 & 14900.24254 & 14826.87646 & 21298.29916 & 1.436465679 \\
         5 & 185.99951 & 17.5 & 34595.81772 & 17297.90886 & 17224.54278 & 25580.14844 & 1.485098836 \\
-        6 & 202.48605 & 20   & 41000.60044 & 20500.30022 & 20426.93415 & 29530.08106 & 1.445644307 \\
+        6 & 202.48605 & 20   & 41000.60044 & 20500.30022 & 20426.93415 & 28620.36068 & 1.401108971 \\
         \bottomrule
     \end{tabular}
     \caption{Gain Values and Variance Statistics}
     \label{tab:GainValues}
 \end{table}
 
-$$ \langle g_k \rangle = 1.511$$ $$\tilde{g_k} = 1.495$$, $$g_k = 1.511 \pm 0.022\footnote{This value, which is an average and thus has easily quantified errors, will be used for converting the read noise to $e^-$ in \ref{readnoisecalc}} $$
+$$ \langle g_k \rangle = 1.427$$ $$\tilde{g_k} = 1.4167$$ 
+\begin{center}
+\fbox{$g_k = 1.427 \pm 0.013\footnote{This value, which is an average and thus has easily quantified errors, will be used for converting the read noise to $e^-$ in \ref{readnoisecalc}} $}
+\end{center}
 
 \subsection{Discussing Gain}
 The flat frames used in this study were not taken as close together as they could have been as $\Delta t_{f_{1, 2}}$ was almost always significantly greater than the $t_{exp, f}$, which increases chances of dust \& changing patterns that can't be perfectly accounted for by differencing. 
