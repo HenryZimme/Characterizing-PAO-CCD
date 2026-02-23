@@ -1,0 +1,1 @@
+I characterized the LI ProLine 4240-1 CCD chip at the Phillips Academy Observatory (PAO) by analyzing bias and flat frames to determine its performance metrics. My analysis focused on a 512x512 region of interest, where I examined the stability of mean bias levels under both cooled and uncooled conditions, and calculated the gain over different signal levels.
