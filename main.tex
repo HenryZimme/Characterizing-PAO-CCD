@@ -9,6 +9,8 @@
 \tableofcontents
 \newpage
 \section{Setup and Initialization Methods}
+
+
 \subsection{CCD Specs}
 
 \label{specs}
@@ -94,6 +96,7 @@ At higher temperatures, the mean bias is much more unstable, with the standard d
 Readout is electrical interference from the CCD chip while converting electron counts to ADU (Analog-to-Digital Units). It can be approximated by differencing bias frames as shown in the formula below, where $B_i$ is the ADU count for a pixel at the time $i$, $B_0$ is the fixed bias pattern, $\Delta B_i$ is a time-dependent variation,  and $R_i$ is readout noise. 
 
 $$B_i = B_0 +\Delta B_i + R_i$$ 
+
 
 If two bias frames are taken at the same time, $\Delta B_i$ should disappear, and the $B_0$ terms should cancel out, leaving us with the difference in two independent readout noise terms. 
 \subsection{Measurement}
